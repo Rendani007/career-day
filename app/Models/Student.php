@@ -14,6 +14,11 @@ class Student extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $casts = [
+        'attended'      => 'boolean',
+        'checked_in_at' => 'datetime',   // <= important
+    ];
+
     protected $fillable = [
         'name',
         'surname',
