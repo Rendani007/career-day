@@ -44,6 +44,7 @@ class StudentRegistrationController extends Controller
         'phone' => 'nullable|string|unique:students,phone',
         'id_number' => 'nullable|string|unique:students,id_number',
     ]);
+ 
 
     // Prevent duplicate registration
     $exists = Student::where('email', $request->email)

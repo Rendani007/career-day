@@ -19,7 +19,7 @@ Route::get('/dashboard', function () {
     return redirect()->route('admin.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//Students
+//Students frontend registration
 Route::get('/student-registration', [StudentRegistrationController::class, 'index'])->name('student-register');
 Route::post('/students', [StudentRegistrationController::class, 'store'])->name('students.store');
 
@@ -34,6 +34,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('/industries', IndustryController::class)->except(['show']);
     Route::resource('/days', DayController::class)->except(['show']);
     Route::resource('/students', StudentController::class)->only(['index', 'destroy']);
+    Route::patch('/students/{student}/attendance',[StudentController::class, 'toggleAttendance'])->name('students.attendance');
+    Route::get('/students-export', [StudentController::class, 'export'])->name('students.export');
     Route::resource('/schools', SchoolController::class);
 
     // Industry-Day assignments
