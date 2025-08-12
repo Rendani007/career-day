@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentRegistrationController;
 use Illuminate\Support\Facades\Route;
+// routes/web.php
+Route::get('/healthz', fn () => 'ok');
 
 Route::get('/', function () {
     return view('/auth/login');
