@@ -103,13 +103,12 @@
                     </div>
 
                     <div>
-                        <label for="studentnum" class="block text-sm font-medium text-gray-700">Student Number</label>
+                        <label for="studentnum" class="block text-sm font-medium text-gray-700">Student Number <span class="text-gray-400">(optional)</span></label>
                         <input
                             type="text"
                             name="studentnum"
                             id="studentnum"
                             autocomplete="off"
-                            required
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
                         />
                     </div>

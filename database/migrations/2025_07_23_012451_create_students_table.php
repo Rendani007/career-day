@@ -18,7 +18,7 @@ return new class extends Migration
         $table->string('email')->unique()->nullable();
         $table->string('phone')->unique()->nullable();
         $table->string('id_number')->unique()->nullable();
-        $table->string('studentnum')->unique();
+        $table->string('studentnum')->unique()->nullable();
         $table->string('grade');
         $table->uuid('school_id'); // foreign key
         $table->uuid('day_industry_id'); // foreign key
