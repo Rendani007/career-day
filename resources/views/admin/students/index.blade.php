@@ -2,10 +2,84 @@
 @section('title', 'All Students')
 
 @section('content')
-<div x-data="studentTable()" class="bg-white p-6 rounded shadow">
+<div
+  class="bg-white p-6 rounded shadow"
+  x-data='{
+    search: "",
+    students: @json($students),
+    csrf: "{{ csrf_token() }}",
+
+    filteredStudents() {
+      if (!this.search) return this.students;
+      const needle = this.search.toLowerCase();
+      return this.students.filter(s =>
+        Object.values(s).some(v => String(v ?? "").toLowerCase().includes(needle))
+      );
+    },
+
+    exportUrl() {
+      const params = new URLSearchParams();
+      if (this.search) params.set("search", this.search);
+      return "{{ route('admin.students.export') }}?" + params.toString();
+    },
+
+    async toggleAttendance(student, attended) {
+      try {
+        const res = await fetch(`{{ url("/admin/students") }}/${student.id}/attendance`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-TOKEN": this.csrf,
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({ attended: attended ? 1 : 0 })
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          alert(`Failed to update attendance (HTTP ${res.status}).\n\n${text}`);
+          return;
+        }
+        const data = await res.json();
+        if (!data.ok) {
+          alert(data.message || "Failed to update attendance.");
+          return;
+        }
+        student.attended = data.attended;
+        student.checked_in_at = data.checked_in_at;
+      } catch (e) {
+        alert("Network error updating attendance.");
+      }
+    },
+
+    async deleteStudent(student) {
+      if (!confirm(`Delete ${student.name} ${student.surname}? This cannot be undone.`)) return;
+
+      try {
+        const res = await fetch(`{{ url("/admin/students") }}/${student.id}`, {
+          method: "DELETE",
+          headers: {
+            "X-CSRF-TOKEN": this.csrf,
+            "Accept": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin"
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          alert(`Failed to delete (HTTP ${res.status}).\n\n${text}`);
+          return;
+        }
+        this.students = this.students.filter(s => s.id !== student.id);
+      } catch (e) {
+        alert("Network error while deleting.");
+      }
+    }
+  }'
+>
     <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mb-4">
         <h2 class="text-xl font-semibold text-gray-700">📋 Registered Students</h2>
-
         <div class="flex gap-2">
             <input
                 type="text"
@@ -32,6 +106,7 @@
                     <th class="border px-3 py-2">Event Day</th>
                     <th class="border px-3 py-2">Industry</th>
                     <th class="border px-3 py-2">Attended</th>
+                    <th class="border px-3 py-2">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,11 +117,11 @@
                         <td class="border px-3 py-2" x-text="student.email || '-'"></td>
                         <td class="border px-3 py-2" x-text="student.phone || '-'"></td>
                         <td class="border px-3 py-2" x-text="student.id_number || '-'"></td>
-                        <td class="border px-3 py-2" x-text="student.studentnum"></td>
-                        <td class="border px-3 py-2" x-text="student.grade"></td>
-                        <td class="border px-3 py-2" x-text="student.school"></td>
-                        <td class="border px-3 py-2" x-text="student.day"></td>
-                        <td class="border px-3 py-2" x-text="student.industry"></td>
+                        <td class="border px-3 py-2" x-text="student.studentnum || '-'"></td>
+                        <td class="border px-3 py-2" x-text="student.grade || '-'"></td>
+                        <td class="border px-3 py-2" x-text="student.school || '-'"></td>
+                        <td class="border px-3 py-2" x-text="student.day || '-'"></td>
+                        <td class="border px-3 py-2" x-text="student.industry || '-'"></td>
                         <td class="border px-3 py-2">
                             <label class="inline-flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox"
@@ -56,66 +131,22 @@
                                 <span class="text-xs text-gray-500" x-text="student.checked_in_at ? ('(' + student.checked_in_at + ')') : ''"></span>
                             </label>
                         </td>
+                        <td class="border px-4 py-2 text-center">
+                            <div class="flex justify-center gap-2">
+                                <a :href="`{{ url('/admin/students') }}/${student.id}/edit`"
+                                   class="bg-yellow-500 text-white px-3 py-1 rounded text-xs hover:bg-yellow-600 transition-colors">
+                                    ✏️ Edit
+                                </a>
+                                <button @click="deleteStudent(student)"
+                                        class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 transition-colors">
+                                    🗑️ Delete
+                                </button>
+                            </div>
+                        </td>
                     </tr>
                 </template>
             </tbody>
         </table>
     </div>
 </div>
-
-<script>
-function studentTable() {
-    return {
-        search: '',
-        students: @json($students),
-        csrf: '{{ csrf_token() }}',
-        filteredStudents() {
-            if (!this.search) return this.students;
-            const needle = this.search.toLowerCase();
-            return this.students.filter(s =>
-                Object.values(s).some(v => String(v ?? '').toLowerCase().includes(needle))
-            );
-        },
-        exportUrl() {
-            const params = new URLSearchParams();
-            if (this.search) params.set('search', this.search);
-            return `{{ route('admin.students.export') }}?` + params.toString();
-        },
-
-        async toggleAttendance(student, attended) {
-            try {
-                const res = await fetch(`{{ url('/admin/students') }}/${student.id}/attendance`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': this.csrf,
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    credentials: 'same-origin', // ensure session cookie is sent
-                    body: JSON.stringify({ attended: attended ? 1 : 0 })
-                });
-
-                if (!res.ok) {
-                    const text = await res.text();
-                    alert(`Failed to update attendance (HTTP ${res.status}).\n\n${text}`);
-                    return;
-                }
-
-                const data = await res.json();
-                if (!data.ok) {
-                    alert(data.message || 'Failed to update attendance.');
-                    return;
-                }
-
-                student.attended = data.attended;
-                student.checked_in_at = data.checked_in_at;
-            } catch (e) {
-                alert('Network error updating attendance.');
-            }
-        }
-
-    }
-}
-</script>
 @endsection

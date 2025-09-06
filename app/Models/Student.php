@@ -16,7 +16,7 @@ class Student extends Model
 
     protected $casts = [
         'attended'      => 'boolean',
-        'checked_in_at' => 'datetime',   // <= important
+        'checked_in_at' => 'datetime',   //so that timestamp formats nicely
     ];
 
     protected $fillable = [
@@ -30,6 +30,7 @@ class Student extends Model
         'school_id',
         'day_industry_id',
     ];
+
 
     protected static function boot()
     {

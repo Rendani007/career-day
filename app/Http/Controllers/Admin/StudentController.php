@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\School;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Symfony\Component\HttpFoundation\StreamedResponse;// Assuming you have a Student model
@@ -29,6 +30,8 @@ class StudentController extends Controller
                 'school' => $student->school->name ?? '-',
                 'day' => $student->dayIndustry->day->name ?? '-',
                 'industry' => $student->dayIndustry->industry->name ?? '-',
+                'attended'    => (bool) $student->attended, // <-- add
+                'checked_in_at' => optional($student->checked_in_at)->toDateTimeString(),
             ];
         });
 
@@ -56,7 +59,7 @@ class StudentController extends Controller
             ], 422);
         }
     }
-    public function export(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function export(Request $request): StreamedResponse
     {
         $search = trim((string) $request->input('search', ''));
 
@@ -131,5 +134,38 @@ class StudentController extends Controller
             fclose($out);
         }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
+    public function edit(Student $student){
+        return view('admin.students.edit',[
+            'student' => $student,
+            'schools' => School::orderBy('name')->get(),
+        ]);
+    }
+    public function update(Request $request, Student $student){
+        $data = $request->validate([
+            'name'       => ['required','string','max:255'],
+            'surname'    => ['required','string','max:255'],
+            'email'      => ['nullable','email','max:255'],
+            'phone'      => ['nullable','string','max:50'],
+            'id_number'  => ['nullable','string','max:50'],
+            'studentnum' => ['nullable','string','max:50'],
+            'grade'      => ['nullable','string','max:20'],
+            'school_id'  => ['nullable','exists:schools,id'],
+        ]);
+
+        $student->update($data);
+
+        return redirect()
+        ->route('admin.students.index')
+        ->with('status', 'Student updated.');
+    }
+    public function destroy(Request $request, Student $student){
+        $student->delete();
+
+        // If called via fetch() with Accept: application/json, return JSON
+        if ($request->wantsJson()) {
+            return response()->json(['ok' => true]);
+        }
+        return back()->with('status', 'Student deleted.');
+        }
 
 }
