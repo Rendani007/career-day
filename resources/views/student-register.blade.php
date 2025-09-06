@@ -66,7 +66,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name <span class="text-gray-400"> * </span></label>
                         <input
                             type="text"
                             name="name"
@@ -78,7 +78,7 @@
                     </div>
 
                     <div>
-                        <label for="surname" class="block text-sm font-medium text-gray-700">Surname</label>
+                        <label for="surname" class="block text-sm font-medium text-gray-700">Surname <span class="text-gray-400"> * </span></label>
                         <input
                             type="text"
                             name="surname"
@@ -90,7 +90,7 @@
                     </div>
 
                     <div>
-                        <label for="grade" class="block text-sm font-medium text-gray-700">Grade</label>
+                        <label for="grade" class="block text-sm font-medium text-gray-700">Grade<span class="text-gray-400"> * </span></label>
                         <input
                             type="number"
                             name="grade"
@@ -114,12 +114,13 @@
                     </div>
 
                     <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number <span class="text-gray-400">(optional)</span></label>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number <span class="text-gray-400"> * </span></label>
                         <input
                             type="tel"
                             name="phone"
                             id="phone"
                             inputmode="tel"
+                            required
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
                         />
                     </div>
@@ -147,7 +148,7 @@
                     </div>
 
                     <div class="sm:col-span-2">
-                        <label for="school_id" class="block text-sm font-medium text-gray-700">School</label>
+                        <label for="school_id" class="block text-sm font-medium text-gray-700">School <span class="text-gray-400"> * </span></label>
                         <select
                             name="school_id"
                             id="school_id"
@@ -162,7 +163,7 @@
                     </div>
 
                     <div class="sm:col-span-2">
-                        <label for="day_industry_id" class="block text-sm font-medium text-gray-700">Event & Industry</label>
+                        <label for="day_industry_id" class="block text-sm font-medium text-gray-700">Event & Industry <span class="text-gray-400"> * </span></label>
                         <select
                             name="day_industry_id"
                             id="day_industry_id"

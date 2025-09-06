@@ -41,7 +41,7 @@ class StudentRegistrationController extends Controller
             'day_industry_id' => 'required|uuid|exists:day_industries,id',
             'studentnum' => 'nullable|integer|unique:students,studentnum',
             'email' => 'nullable|email|unique:students,email',
-            'phone' => 'nullable|string|unique:students,phone',
+            'phone' => 'required|string|unique:students,phone',
             'id_number' => 'nullable|string|unique:students,id_number',
         ]);
 
@@ -53,10 +53,10 @@ class StudentRegistrationController extends Controller
             $duplicateQuery->orWhere('email', $request->email);
             $hasConditions = true;
         }
-        if (!empty($request->phone)) {
-            $duplicateQuery->orWhere('phone', $request->phone);
-            $hasConditions = true;
-        }
+        // if (!empty($request->phone)) {
+        //     $duplicateQuery->orWhere('phone', $request->phone);
+        //     $hasConditions = true;
+        // }
         if (!empty($request->id_number)) {
             $duplicateQuery->orWhere('id_number', $request->id_number);
             $hasConditions = true;
