@@ -29,6 +29,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard', [EventController::class, 'index'])->name('dashboard');
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
+    //event crud
+    Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+    Route::put('/events/{event}',[EventController::class, 'update'])->name('events.update');
+    Route::delete('/events/{event}', [EventController::class, 'delete'])->name('events.delete');
 
     // Other Admin Routes
     Route::resource('/industries', IndustryController::class)->except(['show']);

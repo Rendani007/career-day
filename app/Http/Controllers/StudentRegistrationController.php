@@ -34,15 +34,15 @@ class StudentRegistrationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
-            'grade' => 'required|integer|between:8,12',
-            'school_id' => 'required|uuid|exists:schools,id',
-            'day_industry_id' => 'required|uuid|exists:day_industries,id',
-            'studentnum' => 'nullable|integer|unique:students,studentnum',
-            'email' => 'nullable|email|unique:students,email',
-            'phone' => 'required|string|unique:students,phone',
-            'id_number' => 'nullable|string|unique:students,id_number',
+            'name'            => 'required|string|max:255',
+            'surname'         => 'required|string|max:255',
+            'grade'           => 'required|integer|between:8,12',
+            'school_id'       => 'required|exists:schools,id', // add |uuid only if your IDs are UUID
+            'day_industry_id' => 'nullable|exists:day_industries,id', // add |uuid if that table uses UUIDs
+            'studentnum'      => 'nullable|string|max:50|unique:students,studentnum', // string safer
+            'email'           => 'nullable|email|unique:students,email',
+            'phone'           => 'required|string|unique:students,phone',
+            'id_number'       => 'nullable|string|unique:students,id_number',
         ]);
 
         // Build dynamic duplicate check - only check fields that have values
