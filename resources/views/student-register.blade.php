@@ -6,24 +6,13 @@
     <title>Career Day Student Registration</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        /* Only keep animation here; Tailwind utilities are applied directly */
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in-modal {
-            animation: fadeIn 0.25s ease-out;
-        }
+        .fade-in{animation:fadeIn .6s ease-out}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in-modal{animation:fadeIn .25s ease-out}
     </style>
 </head>
 <body class="min-h-screen bg-gray-50">
-
-    {{-- Hero background (subtle, with overlay), hidden on very small devices if image is heavy --}}
     <div class="fixed inset-0 -z-10">
-        <div class="h-full w-full bg-cover bg-center" style="background-image: url('/images/bg-career.jpg');"></div>
+        <div class="h-full w-full bg-cover bg-center" style="background-image:url('/images/bg-career.jpg')"></div>
         <div class="absolute inset-0 bg-white/70 md:bg-white/60"></div>
     </div>
 
@@ -50,7 +39,7 @@
                 </div>
             @endif
 
-            {{-- Errors --}}
+            {{-- Global errors --}}
             @if($errors->any())
                 <div class="mb-6 p-4 rounded-lg bg-red-50 border border-red-200">
                     <ul class="list-disc pl-5 text-red-700 text-sm sm:text-base">
@@ -65,126 +54,106 @@
                 @csrf
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    {{-- Name --}}
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name <span class="text-gray-400"> * </span></label>
-                        <input
-                            type="text"
-                            name="name"
-                            id="name"
-                            autocomplete="given-name"
-                            required
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        />
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name <span class="text-gray-400">*</span></label>
+                        <input type="text" name="name" id="name" required
+                               value="{{ old('name') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        @error('name') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- Surname --}}
                     <div>
-                        <label for="surname" class="block text-sm font-medium text-gray-700">Surname <span class="text-gray-400"> * </span></label>
-                        <input
-                            type="text"
-                            name="surname"
-                            id="surname"
-                            autocomplete="family-name"
-                            required
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        />
+                        <label for="surname" class="block text-sm font-medium text-gray-700">Surname <span class="text-gray-400">*</span></label>
+                        <input type="text" name="surname" id="surname" required
+                               value="{{ old('surname') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        @error('surname') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- Grade --}}
                     <div>
-                        <label for="grade" class="block text-sm font-medium text-gray-700">Grade<span class="text-gray-400"> * </span></label>
-                        <input
-                            type="number"
-                            name="grade"
-                            id="grade"
-                            min="8" max="12"
-                            inputmode="numeric"
-                            required
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        />
+                        <label for="grade" class="block text-sm font-medium text-gray-700">Grade <span class="text-gray-400">*</span></label>
+                        <input type="number" name="grade" id="grade" min="8" max="12" required
+                               value="{{ old('grade') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        @error('grade') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- Student Number (optional) --}}
                     <div>
                         <label for="studentnum" class="block text-sm font-medium text-gray-700">Student Number <span class="text-gray-400">(optional)</span></label>
-                        <input
-                            type="text"
-                            name="studentnum"
-                            id="studentnum"
-                            autocomplete="off"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        />
+                        <input type="text" name="studentnum" id="studentnum"
+                               value="{{ old('studentnum') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        @error('studentnum') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- Phone --}}
                     <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number <span class="text-gray-400"> * </span></label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            id="phone"
-                            inputmode="tel"
-                            required
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        />
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number <span class="text-gray-400">*</span></label>
+                        <input type="tel" name="phone" id="phone" required inputmode="tel"
+                               value="{{ old('phone') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        @error('phone') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- ID Number (optional) --}}
                     <div>
                         <label for="id_number" class="block text-sm font-medium text-gray-700">ID Number <span class="text-gray-400">(optional)</span></label>
-                        <input
-                            type="text"
-                            name="id_number"
-                            id="id_number"
-                            autocomplete="off"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        />
+                        <input type="text" name="id_number" id="id_number"
+                               value="{{ old('id_number') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        @error('id_number') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- Email (optional) --}}
                     <div class="sm:col-span-2">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email Address <span class="text-gray-400">(optional)</span></label>
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            autocomplete="email"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        />
+                        <input type="email" name="email" id="email"
+                               value="{{ old('email') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        @error('email') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- School --}}
                     <div class="sm:col-span-2">
-                        <label for="school_id" class="block text-sm font-medium text-gray-700">School <span class="text-gray-400"> * </span></label>
-                        <select
-                            name="school_id"
-                            id="school_id"
-                            required
-                            class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        >
+                        <label for="school_id" class="block text-sm font-medium text-gray-700">School <span class="text-gray-400">*</span></label>
+                        <select name="school_id" id="school_id" required
+                                class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
                             <option value="">-- Select School --</option>
                             @foreach($schools as $school)
-                                <option value="{{ $school->id }}">{{ $school->name }}</option>
+                                <option value="{{ $school->id }}" @selected(old('school_id') == $school->id)>
+                                    {{ $school->name }}
+                                </option>
                             @endforeach
                         </select>
+                        @error('school_id') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- Day + Industry (commented out) --}}
+                    {{-- Keep disabled for now; controller rule is already "nullable". --}}
+                    {{--
                     <div class="sm:col-span-2">
-                        <label for="day_industry_id" class="block text-sm font-medium text-gray-700">Event & Industry <span class="text-gray-400"> * </span></label>
-                        <select
-                            name="day_industry_id"
-                            id="day_industry_id"
-                            required
-                            class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                        >
+                        <label for="day_industry_id" class="block text-sm font-medium text-gray-700">Event & Industry <span class="text-gray-400">*</span></label>
+                        <select name="day_industry_id" id="day_industry_id"
+                                class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
                             <option value="">-- Select Day + Industry --</option>
                             @foreach($dayIndustries as $di)
-                                <option value="{{ $di->id }}">
+                                <option value="{{ $di->id }}" @selected(old('day_industry_id') == $di->id)>
                                     {{ $di->day->name }} — {{ $di->industry->name }} ({{ $di->day->event->name }})
                                 </option>
                             @endforeach
                         </select>
+                        @error('day_industry_id') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
+                    --}}
                 </div>
 
                 <div class="pt-2">
-                    <button
-                        type="submit"
-                        class="w-full sm:w-auto inline-flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-                    >
+                    <button type="submit"
+                            class="w-full sm:w-auto inline-flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition">
                         Register Now
                     </button>
                 </div>
