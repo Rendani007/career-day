@@ -21,7 +21,7 @@ return new class extends Migration
         $table->string('studentnum')->unique()->nullable();
         $table->string('grade');
         $table->uuid('school_id')->nullable(); // foreign key
-        $table->uuid('day_industry_id'); // foreign key
+        $table->uuid('day_industry_id')->nullable(); // foreign key
         $table->timestamps();
 
         // Foreign key constraints
